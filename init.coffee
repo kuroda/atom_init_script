@@ -33,6 +33,18 @@ remove_line_markers = () ->
         if i < e
           editor.moveUp()
 
+toggle_line_marker = () ->
+  editor = atom.workspace.getActiveTextEditor()
+  editor.moveToBeginningOfLine()
+  editor.selectRight(1)
+  char = editor.getSelectedText()
+  switch char
+    when "  " then editor.insertText("+ ")
+    when " " then editor.insertText("+")
+    when "+" then editor.insertText("-")
+    when "-" then editor.insertText(" ")
+  editor.moveToBeginningOfLine()
+
 atom.commands.add 'atom-text-editor',
   'custom:insert-review-tag': ->
     editor = atom.workspace.getActiveTextEditor()
@@ -45,11 +57,13 @@ atom.commands.add 'atom-text-editor',
     editor?.insertText("//{\n\n//}\n")
     editor?.moveUp(3)
     editor?.moveRight(2)
-  'custom:review-add-line-markers': ->
+  'custom:add-review-line-markers': ->
     add_line_markers("    ")
-  'custom:review-add-line-markers-plus': ->
+  'custom:add-review-line-markers-plus': ->
     add_line_markers("+   ")
-  'custom:review-add-line-markers-minus': ->
+  'custom:add-review-line-markers-minus': ->
     add_line_markers("-   ")
-  'custom:review-remove-line-markers': ->
+  'custom:remove-review-line-markers': ->
     remove_line_markers()
+  'custom:toggle-review-line-marker': ->
+    toggle_line_marker()
